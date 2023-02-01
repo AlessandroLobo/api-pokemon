@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import PokemonCard from '../../components/PokemonCard'
-import { Container, Grid } from '@mui/material'
+import { Container, Grid, Skeleton } from '@mui/material'
 import axios from 'axios'
+import { Skeletons } from '../../components/Skeletons'
 
 //video 39:10
 
@@ -20,18 +21,9 @@ export const Home = () => {
       endpoints.push(`https://pokeapi.co/api/v2/pokemon/${i}/`);
 
     }
-    console.log(endpoints)
     axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((res) => setPokemons(res)).catch((err) => console.error(err));
 
-    const pokemonFilter = (name) => {
-      var filteredPokemons = []
-      for (var i in pokemons) {
-        if (pokemons[i].name.include(name)) {
-          filteredPokemons.push(pokemons[i]);
-        }
-      }
-      setPokemons(filteredPokemons);
-    }
+
     /*  axios
       .get("https://pokeapi.co/api/v2/pokemon/")
       .then((res) => {
@@ -41,15 +33,35 @@ export const Home = () => {
       .catch((err) => console.error(err)); */
   }
 
+  const pokemonFilter = (name) => {
+    var filteredPokemons = []
+    for (var i in pokemons) {
+      if (name === "") {
+        getPokemons()
+      }
+      if (pokemons[i].data.name.includes(name)) {
+        filteredPokemons.push(pokemons[i]);
+      }
+    }
+    setPokemons(filteredPokemons);
+  }
+
   return (
     <div>
       <Navbar pokemonFilter={pokemonFilter} />
 
       <Container maxWidth="false">
         <Grid container spacing={3}>
-          {pokemons.map((pokemon, key) => (<Grid item xs={2} key={key}>
-            <PokemonCard name={pokemon.data.name} image={pokemon.data.sprites.front_default} />
-          </Grid>))}
+          {pokemons.length === 0 ? (
+            <Skeletons />
+          ) : (
+            pokemons.map((pokemon, key) => (<Grid item xs={12} sm={6} md={2} key={key}>
+              <PokemonCard name={pokemon.data.name} image={pokemon.data.sprites.front_default} types={pokemon.data.types} />
+            </Grid>))
+
+
+          )}
+
 
         </Grid>
       </Container>
