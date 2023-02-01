@@ -45,23 +45,28 @@ export const Home = () => {
     }
     setPokemons(filteredPokemons);
   }
-
   return (
     <div>
       <Navbar pokemonFilter={pokemonFilter} />
 
       <Container maxWidth="false">
         <Grid container spacing={3}>
-          {pokemons.length === 0 ? (
-            <Skeletons />
-          ) : (
-            pokemons.map((pokemon, key) => (<Grid item xs={12} sm={6} md={2} key={key}>
-              <PokemonCard name={pokemon.data.name} image={pokemon.data.sprites.front_default} types={pokemon.data.types} />
-            </Grid>))
 
-
-          )}
-
+          {
+            pokemons.length === 0 ? (
+              <Skeletons />
+            ) : (
+              pokemons.map((pokemon, key) => (
+                <Grid item xs={12} sm={6} md={2} key={key}>
+                  <PokemonCard
+                    name={pokemon.data.name}
+                    image={pokemon.data.sprites.front_default}
+                    types={pokemon.data.types}
+                  />
+                </Grid>
+              ))
+            )
+          }
 
         </Grid>
       </Container>
